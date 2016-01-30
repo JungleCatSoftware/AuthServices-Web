@@ -1,8 +1,13 @@
-def app(environ, start_response):
-    data = b"TEST - WEB\n"
-    start_response("200 OK", [
-        ("Content-Type", "text/plain"),
-        ("Content-Length", str(len(data)))
-    ])
-    return iter([data])
+from flask import Flask
+from werkzeug.contrib.fixers import ProxyFix
 
+app = Flask(__name__)
+
+@app.route("/")
+def root():
+  return "SUCCESS (from authservicesweb::root)\n"
+
+app.wsgi_app = ProxyFix(app.wsgi_app)
+
+if __name__ == "__main__":
+    app.run()
